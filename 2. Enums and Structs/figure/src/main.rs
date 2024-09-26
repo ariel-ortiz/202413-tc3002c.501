@@ -18,18 +18,32 @@ struct Circle {
     radius: f64
 }
 
+#[derive(Debug)]
+struct Triangle {
+    base: f64,
+    height: f64
+}
+
 fn main() {
     let s = Square::new(3.0);
-    println!("{:?}", s);
-    println!("Area = {}", s.area());
-    println!("Perímetero = {}", s.perimeter());
-    println!("Descripción = {}", s.description());
+    figure_report(&s);
 
     let c = Circle::new(10.0);
-    println!("{:?}", c);
-    println!("Area = {}", c.area());
-    println!("Perímetero = {}", c.perimeter());
-    println!("Descripción = {}", c.description());
+    figure_report(&c);
+
+    let t = Triangle::new(4.5, 2.0);
+    figure_report(&t);
+
+    let x: f64 = 42.0;
+    figure_report(&x);
+}
+
+fn figure_report<T: Figure>(figure: &T) {
+    println!("FIGURE: {}", figure.description());
+    println!("---------------------------------------");
+    println!("Area = {:.2} m^2", figure.area());
+    println!("Perímtero = {:.2} m", figure.perimeter());
+    println!();
 }
 
 impl Square {
@@ -53,7 +67,7 @@ impl Figure for Square {
     }
 }
 
-impl  Circle {
+impl Circle {
     fn new(radius: f64) -> Self {
         Self { radius }
     }
@@ -67,5 +81,45 @@ impl Figure for Circle {
 
     fn perimeter(&self) -> f64 {
         PI * 2.0 * self.radius
+    }
+
+    fn description(&self) -> String {
+        format!("Circle (radius = {:.2} m)", self.radius)
+    }
+}
+
+impl Triangle {
+    fn new(base: f64, height: f64) -> Self {
+        Self { base, height }
+    }
+}
+
+impl Figure for Triangle {
+
+    fn area(&self) -> f64 {
+        self.base * self.height / 2.0
+    }
+
+    fn perimeter(&self) -> f64 {
+        self.base * 3.0
+    }
+
+    fn description(&self) -> String {
+        format!("Triangle (base = {} m, height = {} m)", self.base, self.height)
+    }
+}
+
+impl Figure for f64 {
+
+    fn area(&self) -> f64 {
+        f64::NAN
+    }
+
+    fn perimeter(&self) -> f64 {
+        f64::NAN
+    }
+
+    fn description(&self) -> String {
+        format!("f64 ({:.2})", self)
     }
 }
